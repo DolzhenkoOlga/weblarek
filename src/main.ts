@@ -1,1 +1,88 @@
 import './scss/styles.scss';
+import { apiProducts } from './utils/data';
+
+import { Catalog } from './components/base/models/Catalog';
+import { Basket } from './components/base/models/Basket';
+import { Buyer } from './components/base/models/Buyer';
+
+import { Api } from './components/base/Api';
+import { API_URL } from './utils/constants';
+import { LarekApi } from './components/API/LarekApi';
+
+// Создание экземпляров классов
+const catalog = new Catalog();
+const basket = new Basket();
+const buyer = new Buyer();
+
+// Проверка модели каталога товаров
+catalog.setProducts(apiProducts.items);
+
+console.log("Каталог товаров:", catalog.getProducts());
+
+const firstProduct = catalog.getProducts()[0];
+
+console.log("Получение товара по id:", catalog.getProduct(firstProduct.id));
+
+catalog.setPreview(firstProduct);
+
+console.log("Товар для подробного отображения:", catalog.getPreview());
+
+// Проверка модели корзины
+basket.addItems(firstProduct);
+
+console.log("Товары в корзине после добавления:", basket.getItems());
+
+console.log("Количество товаров в корзине:", basket.getCount());
+
+console.log("Стоимость товаров в корзине:", basket.getTotal());
+
+console.log(
+  "Проверка наличия товара в корзине:",
+  basket.hasItem(firstProduct.id),
+);
+
+basket.removeItem(firstProduct);
+
+console.log("Корзина после удаления товара:", basket.getItems());
+
+basket.clear();
+
+console.log("Корзина после очистки:", basket.getItems());
+
+// Проверка модели покупателя
+buyer.setData({
+  payment: "cash",
+  address: "г. Санкт-Петербург, ул. Пятилеток д. 1",
+});
+
+console.log("Данные покупателя после частичного заполнения:", buyer.getData());
+
+console.log("Ошибки валидации:", buyer.validate());
+
+buyer.setData({
+  email: "dolzhenkoolga355@gmail.com",
+  phone: "+79215596535",
+});
+
+console.log("Данные покупателя после полного заполнения:", buyer.getData());
+
+console.log("Ошибки валидации после заполнения:", buyer.validate());
+
+buyer.clear();
+
+console.log("Данные покупателя после очистки:", buyer.getData());
+
+const api = new Api(API_URL);
+const larekApi = new LarekApi(api);
+
+larekApi
+  .getProducts()
+  .then((data) => {
+    catalog.setProducts(data.items);
+
+    console.log("Товары с сервера:", data.items);
+    console.log("Каталог из модели:", catalog.getProducts());
+  })
+  .catch((error) => {
+    console.log(error);
+  });
