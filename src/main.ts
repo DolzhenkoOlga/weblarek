@@ -28,7 +28,7 @@ catalog.setPreview(firstProduct);
 console.log("Товар для подробного отображения:", catalog.getPreview());
 
 // Проверка модели корзины
-basket.addItems(firstProduct);
+basket.addItem(firstProduct);
 
 console.log("Товары в корзине после добавления:", basket.getItems());
 

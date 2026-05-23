@@ -28,7 +28,7 @@ export class Buyer {
   }
 
   validate(): TFormErrors {
-    const errors: Partial<Record<keyof IBuyer, string>> = {};
+    const errors: TFormErrors = {};
 
     if (!this.payment) {
       errors.payment = "Не выбран способ оплаты";

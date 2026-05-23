@@ -7,7 +7,7 @@ export class Basket {
         return this.items;
     }
 
-    addItems(product:IProduct):void {
+    addItem(product:IProduct):void {
         this.items.push(product);
     }
 
