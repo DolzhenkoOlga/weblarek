@@ -1,51 +1,58 @@
-import { IBuyer } from "../../../types";
-import { TFormErrors } from "../../../types";
+import { IEvents } from "../Events";
+import { IProduct } from "../../../types";
 
-export class Buyer {
-  protected payment: IBuyer["payment"] | null = null;
-  protected email = "";
-  protected phone = "";
-  protected address = "";
+export class Basket {
+  protected items: IProduct[] = [];
 
-  setData(data: Partial<IBuyer>): void {
-    Object.assign(this, data);
+  constructor(protected events: IEvents) {}
+
+  getItems(): IProduct[] {
+    return this.items;
   }
 
-  getData(): IBuyer {
-    return {
-      payment: this.payment,
-      email: this.email,
-      phone: this.phone,
-      address: this.address,
-    };
+  addItem(product: IProduct): void {
+    if (this.hasItem(product.id)) {
+      return;
+    }
+
+    this.items.push(product);
+
+    this.emitChanges();
+  }
+
+  removeItem(id: string): void {
+    const previousLength = this.items.length;
+
+    this.items = this.items.filter((item) => item.id !== id);
+
+    if (this.items.length !== previousLength) {
+      this.emitChanges();
+    }
   }
 
   clear(): void {
-    this.payment = null;
-    this.email = "";
-    this.phone = "";
-    this.address = "";
+    if (this.items.length === 0) {
+      return;
+    }
+
+    this.items = [];
+
+    this.emitChanges();
   }
 
-  validate(): TFormErrors {
-    const errors: TFormErrors = {};
+  getTotal(): number {
+    return this.items.reduce((total, item) => total + (item.price ?? 0), 0);
+  }
 
-    if (!this.payment) {
-      errors.payment = "Не выбран способ оплаты";
-    }
+  getCount(): number {
+    return this.items.length;
+  }
 
-    if (!this.email.trim()) {
-      errors.email = "Укажите email";
-    }
+  hasItem(id: string): boolean {
+    return this.items.some((item) => item.id === id);
+  }
 
-    if (!this.phone.trim()) {
-      errors.phone = "Укажите телефон";
-    }
-
-    if (!this.address.trim()) {
-      errors.address = "Укажите адрес";
-    }
-
-    return errors;
+  protected emitChanges(): void {
+    this.events.emit("basket:changed");
   }
 }

@@ -1,26 +1,58 @@
+import { IEvents } from "../Events";
 import { IProduct } from "../../../types";
 
-export class Catalog {
-  protected products: IProduct[] = [];
-  protected preview: IProduct | null = null;
+export class Basket {
+  protected items: IProduct[] = [];
 
-  setProducts(products: IProduct[]): void {
-    this.products = products;
+  constructor(protected events: IEvents) {}
+
+  getItems(): IProduct[] {
+    return this.items;
   }
 
-  getProducts(): IProduct[] {
-    return this.products;
+  addItem(product: IProduct): void {
+    if (this.hasItem(product.id)) {
+      return;
+    }
+
+    this.items.push(product);
+
+    this.emitChanges();
   }
 
-  getProduct(id: string): IProduct | undefined {
-    return this.products.find(product => product.id === id);
+  removeItem(id: string): void {
+    const previousLength = this.items.length;
+
+    this.items = this.items.filter((item) => item.id !== id);
+
+    if (this.items.length !== previousLength) {
+      this.emitChanges();
+    }
   }
 
-  setPreview(product: IProduct): void {
-    this.preview = product;
+  clear(): void {
+    if (this.items.length === 0) {
+      return;
+    }
+
+    this.items = [];
+
+    this.emitChanges();
   }
 
-  getPreview(): IProduct | null {
-    return this.preview;
+  getTotal(): number {
+    return this.items.reduce((total, item) => total + (item.price ?? 0), 0);
+  }
+
+  getCount(): number {
+    return this.items.length;
+  }
+
+  hasItem(id: string): boolean {
+    return this.items.some((item) => item.id === id);
+  }
+
+  protected emitChanges(): void {
+    this.events.emit("basket:changed");
   }
 }
