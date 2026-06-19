@@ -49,9 +49,7 @@ const api = new Api(API_URL, {
         "Content-Type": "application/json",
     },
 });
-const webLarekApi = new LarekApi(api, API_URL, {
-    cdn: CDN_URL,
-});
+const webLarekApi = new LarekApi(api);
 
 // Основные компоненты Представления
 const header = new Header(events, ensureElement<HTMLElement>(".header"));
@@ -99,7 +97,7 @@ const success = new Success(cloneTemplate<HTMLElement>(successTemplate), {
 });
 
 // Функция отображения содержимого корзины
-const renderBasket = (): void => {
+const onBasketChanged = (): void => {
     const items = basket.getItems().map((product, index) => {
         const card = new BasketCard(
             cloneTemplate<HTMLElement>(basketCardTemplate),
@@ -178,7 +176,7 @@ events.on("preview:changed", () => {
     const isUnavailable = product.price === null;
 
     const buttonText = isUnavailable
-        ? "В корзину"
+        ? "Недоступно"
         : isSelected
             ? "Удалить из корзины"
             : "В корзину";
@@ -223,7 +221,7 @@ events.on<ICardEvent>("basket:delete", ({ id }) => {
 
 // Изменение содержимого корзины
 events.on("basket:changed", () => {
-    renderBasket();
+    onBasketChanged();
 });
 
 // Открытие корзины
