@@ -1,21 +1,20 @@
-import { IApi } from "../../types";
-import { IOrder } from "../../types";
-import { IProductResponse } from "../../types";
-import { IOrderResult } from "../../types";
-
+import { IProduct } from "../../types/index";
+import { IOrderResult } from "../../types/index";
+import { IOrder } from "../../types/index";
+import { IApi } from "../../types/index";
 
 export class LarekApi {
-    protected api: IApi;
+  protected api: IApi;
 
-    constructor(api:IApi) {
-        this.api = api;
-    }
+  constructor(api: IApi) {
+    this.api = api;
+  }
 
-    getProducts(): Promise<IProductResponse> {
-        return this.api.get<IProductResponse>("/product/");
-    }
+  getProducts(): Promise<IProductsResponse> {
+    return this.api.get<IProductsResponse>("/product/");
+  }
 
-    postOrder(order: IOrder): Promise<IOrderResult> {
-        return this.api.post<IOrderResult> ("/order/",order);
-    }
+  postOrder(order: IOrder): Promise<IOrderResult> {
+    return this.api.post<IOrderResult>("/order/", order);
+  }
 }

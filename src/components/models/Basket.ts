@@ -1,5 +1,5 @@
-import { IEvents } from "../Events";
-import { IProduct } from "../../../types";
+import { IEvents } from "../base/Events";
+import { IProduct } from "../../types/index";
 
 export class Basket {
   protected items: IProduct[] = [];

@@ -1,71 +1,84 @@
-export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
+import { categoryMap } from "../utils/constants";
+
+export type CategoryKey = keyof typeof categoryMap;
+
+export type ApiPostMethods = "POST" | "PUT" | "DELETE";
 
 export interface IApi {
-    get<T extends object>(uri: string): Promise<T>;
-    post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
+  get<T extends object>(uri: string): Promise<T>;
+
+  post<T extends object>(
+    uri: string,
+    data: object,
+    method?: ApiPostMethods,
+  ): Promise<T>;
 }
 
 export interface IProduct {
-    id: string;
-    title: string;
-    image: string;
-    category: string;
-    price: number | null;
-    description: string;
+  id: string;
+  description: string;
+  image: string;
+  title: string;
+  category: string;
+  price: number | null;
 }
 
-type TPayment = "card | cash";
+export type TPayment = "card" | "cash" | "";
 
 export interface IBuyer {
-    payment: TPayment;
-    email: string;
-    phone: string;
-    address: string;
+  payment: TPayment;
+  email: string;
+  phone: string;
+  address: string;
 }
 
-export interface IProductResponse {
-    total: number;
-    items: IProduct[];
+export interface IProductsResponse {
+  total: number;
+  items: IProduct[];
 }
 
 export interface IOrder extends IBuyer {
-    id: string;
-    total: number;
+  items: string[];
+  total: number;
 }
 
 export interface IOrderResult {
-    id: string;
-    total: number;
+  id: string;
+  total: number;
 }
 
 export type TFormErrors = Partial<Record<keyof IBuyer, string>>;
 
 export interface IHeaderData {
-    counter: number;
+  counter: number;
 }
 
 export interface IGalleryData {
-    catalog: HTMLElement[];
+  catalog: HTMLElement[];
 }
 
 export interface IModalData {
-    content: HTMLElement;
+  content: HTMLElement;
 }
 
 export interface ICardData {
-    title: string;
-    price: number | null;
+  title: string;
+  price: number | null;
 }
 
 export interface ICatalogCardData extends ICardData {
-    category: string;
-    image: string;
+  category: string;
+  image: string;
+}
+
+export interface ICardActions {
+  onClick?: (event: MouseEvent) => void;
 }
 
 export interface IPreviewCardData extends ICatalogCardData {
-    description: string;
-    buttonText: string;
-    buttonDisabled: boolean;
+  description: string;
+  buttonText: string;
+  buttonDisabled: boolean;
 }
 
 export interface IBasketCardData extends ICardData {
@@ -82,6 +95,11 @@ export interface IFormState {
   errors: string;
 }
 
+export interface IFormFieldChange<T> {
+  field: keyof T;
+  value: string;
+}
+
 export interface IOrderFormData {
   payment: TPayment | null;
   address: string;
@@ -96,15 +114,10 @@ export interface ISuccessData {
   total: number;
 }
 
-export interface ICardActions {
-  onClick?: (event: MouseEvent) => void;
-}
-
-export interface IFormFieldChange<T> {
-  field: keyof T;
-  value: string;
-}
-
 export interface ISuccessActions {
   onClick?: (event: MouseEvent) => void;
+}
+
+export interface ICardEvent {
+  id: string;
 }

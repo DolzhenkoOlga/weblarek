@@ -3,7 +3,6 @@ import { ensureElement } from "../../utils/utils";
 import { IBasketCardData, ICardActions } from "../../types";
 
 export class BasketCard extends Card<IBasketCardData> {
-
   protected indexElement: HTMLElement;
   protected deleteButton: HTMLButtonElement;
   constructor(container: HTMLElement, actions?: ICardActions) {
